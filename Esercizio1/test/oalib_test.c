@@ -54,34 +54,57 @@ static void remove_obj_from_array() {
     free_ordered_array(oa);
 }
 
-static void test_quick_sort() {
-    OrderedArray *oa = new_ordered_array(10);
-    record* rec;
-    insert_obj(oa, init_record(5, "a"));
-    insert_obj(oa, init_record(2, "a"));
-    quickSort(oa, (compare_fun) compare_function, sizeof(record));
-    rec = get_obj(oa, 0);
-    TEST_ASSERT_EQUAL(2, rec->id);
-    rec = get_obj(oa, 1);
-    TEST_ASSERT_EQUAL(5, rec->id);
+/* static void test_quick_sort() { */
+/*     OrderedArray *oa = new_ordered_array(10); */
+/*     record* rec; */
+/*     insert_obj(oa, init_record(5, "a")); */
+/*     insert_obj(oa, init_record(2, "a")); */
+/*     quickSort(oa, (compare_fun) compare_function, sizeof(record)); */
+/*     rec = get_obj(oa, 0); */
+/*     TEST_ASSERT_EQUAL(2, rec->id); */
+/*     rec = get_obj(oa, 1); */
+/*     TEST_ASSERT_EQUAL(5, rec->id); */
 
-    insert_obj(oa, init_record(4, "a"));
-    insert_obj(oa, init_record(1, "a"));
-    insert_obj(oa, init_record(3, "a"));
-    quickSort(oa, (compare_fun) compare_function, sizeof(record));
-    for (int i = 0; i < 5; i++) {
-        rec = get_obj(oa, i);
-        TEST_ASSERT_EQUAL(i + 1, rec->id);
-    }
-    free_ordered_array(oa);
-}
+/*     insert_obj(oa, init_record(4, "a")); */
+/*     insert_obj(oa, init_record(1, "a")); */
+/*     insert_obj(oa, init_record(3, "a")); */
+/*     quickSort(oa, (compare_fun) compare_function, sizeof(record)); */
+/*     for (int i = 0; i < 5; i++) { */
+/*         rec = get_obj(oa, i); */
+/*         TEST_ASSERT_EQUAL(i + 1, rec->id); */
+/*     } */
+/*     free_ordered_array(oa); */
+/* } */
+
+/* static void test_insertion_sort() { */
+/*     OrderedArray *oa = new_ordered_array(10); */
+/*     record* rec; */
+/*     insert_obj(oa, init_record(5, "a")); */
+/*     insert_obj(oa, init_record(2, "a")); */
+/*     insertionSort(oa, (compare_fun) compare_function, sizeof(record)); */
+/*     rec = get_obj(oa, 0); */
+/*     TEST_ASSERT_EQUAL(2, rec->id); */
+/*     rec = get_obj(oa, 1); */
+/*     TEST_ASSERT_EQUAL(5, rec->id); */
+
+/*     insert_obj(oa, init_record(4, "a")); */
+/*     insert_obj(oa, init_record(1, "a")); */
+/*     insert_obj(oa, init_record(3, "a")); */
+/*     insertionSort(oa, (compare_fun) compare_function, sizeof(record)); */
+/*     for (int i = 0; i < 5; i++) { */
+/*         rec = get_obj(oa, i); */
+/*         TEST_ASSERT_EQUAL(i + 1, rec->id); */
+/*     } */
+/*     free_ordered_array(oa); */
+/* } */
 
 static void test_insertion_sort() {
     OrderedArray *oa = new_ordered_array(10);
     record* rec;
     insert_obj(oa, init_record(5, "a"));
     insert_obj(oa, init_record(2, "a"));
-    insertionSort(oa, (compare_fun) compare_function, sizeof(record));
+    merge_sort(oa, (compare_fun) compare_function);
+
     rec = get_obj(oa, 0);
     TEST_ASSERT_EQUAL(2, rec->id);
     rec = get_obj(oa, 1);
@@ -103,7 +126,7 @@ int main(int argc, char *argv[]) {
     RUN_TEST(new_ordered_array_default_parameters);
     RUN_TEST(insert_obj_in_array);
     RUN_TEST(remove_obj_from_array);
-    RUN_TEST(test_quick_sort);
-    RUN_TEST(test_insertion_sort);
+    /* RUN_TEST(test_quick_sort); */
+    /* RUN_TEST(test_insertion_sort); */
     UNITY_END();
 }

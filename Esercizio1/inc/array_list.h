@@ -6,9 +6,9 @@
                         getpid(), __FILE__, __LINE__, errno, strerror(errno));}
 
 /**
- * Define struct OrderedArray that contain info about array
+ * Define struct ArrayList that contain info about array
  */
-typedef struct _OrderedArray OrderedArray;
+typedef struct _ArrayList ArrayList;
 
 /**
  * Define function pointer with generic parameters used for sort
@@ -19,49 +19,45 @@ typedef struct _OrderedArray OrderedArray;
 typedef int (*compare_fun)(void *, void *);
 
 /**
- * Create new OrderedArray whit default parameters
- * @return [OrderedArray*] OrderedArray struct pointer
+ * Create new ArrayList whit default parameters
+ * @return [ArrayList*] ArrayList struct pointer
  */
-OrderedArray *new_ordered_array(int);
+ArrayList *new_array_list(int);
 
 /**
- * Frees the memory allocated by new_ordered_array().
+ * Frees the memory allocated by new_array_list().
  */
-void free_ordered_array(OrderedArray *);
+void free_array_list(ArrayList *);
 
 /**
  * Insert generic object into array
  */
-void insert_obj(OrderedArray *, void *);
+void add_element(ArrayList *, void *);
 
 /**
  * Get the obj in position i
  * @return [void*] Generic obj pointer
  */
-void *get_obj(OrderedArray *, int);
+void *get_obj(ArrayList *, int);
 
 /**
  * Remove obj in position i
  */
-void remove_obj(OrderedArray *, int);
+void remove_obj(ArrayList *, int);
 
 /**
  * Get the current numbers of obj into array
  * @return [int] array size
  */
-int get_size(OrderedArray *);
+int get_size(ArrayList *);
 
 /**
  * Get the current array capacity
  * @return [int] array capacity
  */
-int get_capacity(OrderedArray *);
+int get_capacity(ArrayList *);
 
 /**
  * Sort the array increasingly
  */
-void mergeSort(OrderedArray *,int,int compare_fun);
-
-/**
- * Sort the array increasingly
- */
+void merge_sort(ArrayList *, compare_fun);

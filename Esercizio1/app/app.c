@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
-#include "../inc/oalib.h"
+#include "../inc/array_list.h"
 
 #define ARRAY_CAPACITY 20000000
 
@@ -36,12 +36,12 @@ int compare_field3(record *record1, record *record2) {
     }
 }
 
-void print_array(OrderedArray *orderedArray) {
+void print_array(ArrayList *al) {
     time(&time_start);
     printf("Starting to copy sorted array into file...\n");
     FILE *file = fopen("data/records_ordered", "w");
     for (int i = 0; i < ARRAY_CAPACITY; i++) {
-        record *rec = get_obj(orderedArray, i);
+        record *rec = get_obj(al, i);
         fprintf(file, "%d,%s,%d,%f\n", rec->id, rec->field1, rec->field2,
                 rec->field3);
     }
@@ -49,7 +49,7 @@ void print_array(OrderedArray *orderedArray) {
     printf("Done! array copied in %d seconds\n", (int) difftime(time_end, time_start));
 }
 
-void load_data_into_array(OrderedArray *orderedArray, char *filename) {
+void lald_data_into_array(ArrayList *al, char *filename) {
     time(&time_start);
     printf("Starting to copy records into array...\n");
     FILE *file = fopen(filename, "r");
@@ -59,45 +59,39 @@ void load_data_into_array(OrderedArray *orderedArray, char *filename) {
         rec->field1 = (char *) malloc(20);
         fscanf(file, "%d,%20[^,],%d,%f\n", &rec->id, rec->field1, &rec->field2, &rec->field3);
         CATCH_ERROR
-        insert_obj(orderedArray, rec);
+        add_element(al, rec);
     }
     time(&time_end);
     printf("Done! records copied in %d seconds\n", (int) difftime(time_end, time_start));
 }
 
-void sort_array(OrderedArray *oa, char **settings) {
+void sort_array(ArrayList *al, char *settings) {
     void *cmp;
     printf("Starting to sort the array...\n");
     time(&time_start);
-    if (strcmp(settings[1], "1") == 0) {
+    if (strcmp(settings, "1") == 0) {
         cmp = (compare_fun) compare_field1;
-    } else if (strcmp(settings[1], "2") == 0) {
+    } else if (strcmp(settings, "2") == 0) {
         cmp = (compare_fun) compare_field2;
     } else {
         cmp = (compare_fun) compare_field3;
     }
-    if (strcmp(settings[0], "1") == 0) {
-        quickSort(oa, cmp, sizeof(record));
-    } else {
-        insertionSort(oa, cmp, sizeof(record));
-    }
+
+/* NOTA: Come detto in precedenza, qui ti faccio notare come possa chiamare il */
+/* metodo senza dover sapere i dettagli implementativi di ArrayList, come */
+/* era richiesto precedentemente (perche' dovevi passare esplicitamente il */
+/* lower e l'upper bound della prima chiamata ricorsiva */
+    merge_sort(al, cmp);
     time(&time_end);
     printf("Done! array sorted in %d seconds\n", (int) difftime(time_end, time_start));
 }
 
-char **menu() {
-    char **settings = (char **) malloc(sizeof(char *) * 2);
-    do {
-        printf("SELECT ALGORITHM: 1 -> QuickSort, 2 -> InsertionSort: ");
-        settings[0] = (char *) malloc(sizeof(char) * 10);
-        scanf("%s", settings[0]);
-    } while ((strcmp(settings[0], "1") != 0) && (strcmp(settings[0], "2") != 0));
-    CATCH_ERROR
+char *menu() {
+    char *settings = (char *) malloc(sizeof(char) * 10);
     do {
         printf("SELECT SORT ORDER: 1 -> [char*]field1, 2 -> [int]field2, 3 -> [float]field3: ");
-        settings[1] = (char *) malloc(sizeof(char) * 10);
-        scanf("%s", settings[1]);
-    } while ((strcmp(settings[1], "1") != 0) && (strcmp(settings[1], "2") != 0) && (strcmp(settings[1], "3") != 0));
+        scanf("%s", settings);
+    } while ((strcmp(settings, "1") != 0) && (strcmp(settings, "2") != 0) && (strcmp(settings, "3") != 0));
     CATCH_ERROR
     return settings;
 }
@@ -109,12 +103,12 @@ int main(int argc, char *argv[]) {
     } else {
         path = "data/records.csv";
     }
-    char **settings = menu();
-    OrderedArray *oa = new_ordered_array(ARRAY_CAPACITY);
-    load_data_into_array(oa, path);
-    sort_array(oa, settings);
-    print_array(oa);
-    free_ordered_array(oa);
+    char *settings = menu();
+    ArrayList *al = new_array_list(ARRAY_CAPACITY);
+    lald_data_into_array(al, path);
+    sort_array(al, settings);
+    print_array(al);
+    free_array_list(al);
     free(settings);
     exit(0);
 }
